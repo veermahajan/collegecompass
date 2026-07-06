@@ -66,6 +66,13 @@ export default function LoginPage() {
             />
           </label>
 
+          <Link
+            href="/forgot-password"
+            className="-mt-2 self-end text-[0.85rem] font-medium text-sage-deep"
+          >
+            Forgot password?
+          </Link>
+
           {error && (
             <p className="text-[0.85rem] text-red-700" role="alert">
               {error}

@@ -39,6 +39,20 @@ model User {
   journalEntries    JournalEntry[]
   collegeListItems  CollegeListEntry[]
   feedbackSubmissions FeedbackSubmission[]
+  passwordResetTokens PasswordResetToken[]
+}
+
+// Added in Phase A1 for the password reset flow (spec Sec 8 requires
+// rate-limited password reset). Not present in the original locked
+// schema — flagging per Sec 7 rather than patching silently.
+model PasswordResetToken {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  tokenHash   String    @unique // sha256 of the raw token; raw token only ever lives in the emailed link
+  expiresAt   DateTime
+  usedAt      DateTime?
+  createdAt   DateTime  @default(now())
 }
 
 // ---- Owned primarily by Workflow A ----
