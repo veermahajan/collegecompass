@@ -2,7 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { encryptJson, decryptJson } from "@/lib/encryption";
 import type { ContextInput } from "@/lib/validations/profile";
 import { toVisibleScores } from "@/lib/compass-score-serializer";
-export type { VisibleCompassScores } from "@/lib/compass-score-serializer";
+import type { VisibleCompassScores } from "@/lib/compass-score-serializer";
+export type { VisibleCompassScores };
 
 // Phase A4 — Compass Score engine (spec Sec 8 + A4 checklist).
 //
