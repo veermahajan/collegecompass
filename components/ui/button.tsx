@@ -17,9 +17,11 @@ const variants: Record<Variant, string> = {
   ghost: "bg-transparent text-ink border-line hover:border-ink-soft",
 };
 
+// min-h ensures every button meets the ~44px iOS/Android minimum
+// touch-target size regardless of its (usually shorter) text content.
 const sizes: Record<Size, string> = {
-  default: "px-[18px] py-[9px] text-[0.9rem]",
-  lg: "px-[26px] py-[13px] text-[0.95rem]",
+  default: "min-h-11 px-[18px] py-[9px] text-[0.9rem]",
+  lg: "min-h-11 px-[26px] py-[13px] text-[0.95rem]",
 };
 
 function classes(variant: Variant, size: Size, className?: string) {

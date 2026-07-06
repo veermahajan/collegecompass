@@ -42,7 +42,12 @@ function polygonPoints(scores: number[]): string {
 
 function RadarChart({ scores }: { scores: number[] }) {
   return (
-    <svg width={SIZE} height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`}>
+    <svg
+      width={SIZE}
+      height={SIZE}
+      viewBox={`0 0 ${SIZE} ${SIZE}`}
+      className="h-auto w-full max-w-[260px]"
+    >
       {RINGS.map((ring) => (
         <polygon
           key={ring}

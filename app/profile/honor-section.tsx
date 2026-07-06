@@ -89,7 +89,7 @@ export function HonorSection({
         ))}
       </ul>
 
-      <form onSubmit={handleAdd} className="grid grid-cols-3 gap-3">
+      <form onSubmit={handleAdd} className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <input
           type="text"
           name="title"

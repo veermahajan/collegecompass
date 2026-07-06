@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -23,6 +23,15 @@ export const metadata: Metadata = {
   title: "Compass — College Guidance, Built by Students",
   description:
     "A free, all-in-one college application tool built by current high schoolers, for students without access to paid counselors.",
+};
+
+// Without this, mobile browsers render at a virtual desktop-width
+// viewport (~980px on iOS Safari) and scale the whole page down —
+// nav, headings, and forms all render tiny until the user pinch-zooms.
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#FBF7EE",
 };
 
 export default function RootLayout({

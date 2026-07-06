@@ -60,7 +60,7 @@ export function GpaSummary({ profile }: { profile: AcademicProfile }) {
       </div>
 
       {editing ? (
-        <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <NumField
             label="Unweighted GPA"
             name="unweightedGpa"

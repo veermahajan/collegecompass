@@ -16,7 +16,7 @@ export default function Home() {
           <span className="h-px w-4 bg-sky" />
           Phase 0 scaffold
         </div>
-        <h1 className="mb-5 text-5xl leading-[1.08]">
+        <h1 className="mb-5 text-4xl leading-[1.1] sm:text-5xl sm:leading-[1.08]">
           Find your <em className="italic text-sage-deep">direction</em>,
           <br />
           not just your dream school.

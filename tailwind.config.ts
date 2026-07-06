@@ -27,8 +27,12 @@ const config: Config = {
         mono: ["var(--font-plex-mono)", "monospace"], // scores, numbers, timestamps
       },
       screens: {
-        // Nav breakpoint per spec: horizontal tabs ≥860px, hamburger below
-        nav: "860px",
+        // Spec originally called for 860px, but nav item count has since
+        // grown to 9 across workflows — at 860px even a tightened row
+        // (gap-4, 0.85rem, nowrap) doesn't fit within the 1180px container's
+        // available content width. Raised so the horizontal-tab layout only
+        // appears once there's actually room for it; verified in-browser.
+        nav: "1100px",
       },
     },
   },
