@@ -7,13 +7,15 @@ import { CourseSection } from "./course-section";
 import { ExtracurricularSection } from "./extracurricular-section";
 import { HonorSection } from "./honor-section";
 import { GpaSummary } from "./gpa-summary";
+import { CompassScoreSection } from "./compass-score-section";
+import { ContextSection } from "./context-section";
 
 export default async function ProfilePage() {
   const session = await auth();
   if (!session?.user) redirect("/login");
 
   const profile = await ensureProfile(session.user.id);
-  const [courses, extracurriculars, honors] = await Promise.all([
+  const [courses, extracurriculars, honors, user] = await Promise.all([
     prisma.course.findMany({
       where: { profileId: profile.id },
       orderBy: { name: "asc" },
@@ -25,6 +27,10 @@ export default async function ProfilePage() {
     prisma.honorAward.findMany({
       where: { profileId: profile.id },
       orderBy: { year: "desc" },
+    }),
+    prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { consentSensitiveData: true },
     }),
   ]);
 
@@ -45,6 +51,8 @@ export default async function ProfilePage() {
         <CourseSection initialCourses={courses} />
         <ExtracurricularSection initialEntries={extracurriculars} />
         <HonorSection initialHonors={honors} />
+        <ContextSection hasConsent={Boolean(user?.consentSensitiveData)} />
+        <CompassScoreSection />
       </main>
     </>
   );

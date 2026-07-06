@@ -15,6 +15,7 @@ export type NavItem = { label: string; href: string };
 
 const NAV_ITEMS: NavItem[] = [
   { label: "Dashboard", href: "/dashboard" },
+  { label: "Profile", href: "/profile" },
   { label: "College List", href: "/college-list" },
   { label: "Journal", href: "/journal" },
   { label: "Guidance", href: "/guidance" },

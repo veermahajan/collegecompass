@@ -38,3 +38,29 @@ export const profilePatchSchema = z.object({
 });
 
 export type ProfilePatchInput = z.infer<typeof profilePatchSchema>;
+
+// Phase A4 — raw input for the Compass Score engine's Context/socioeconomic
+// subscore. Requires the user to have already checked consentSensitiveData
+// at signup (Sec 8); enforced in app/api/profile/context/route.ts, not here.
+// Encrypted immediately on write (lib/encryption.ts) — never stored or
+// returned in plaintext.
+export const CONTEXT_PARENTAL_EDUCATION_LEVELS = [
+  "no-high-school",
+  "high-school",
+  "some-college",
+  "bachelors-or-higher",
+] as const;
+
+export const CONTEXT_FINANCIAL_AID_STATUSES = [
+  "full-financial-need",
+  "some-financial-need",
+  "no-financial-need",
+  "prefer-not-to-say",
+] as const;
+
+export const contextInputSchema = z.object({
+  parentalEducationLevel: z.enum(CONTEXT_PARENTAL_EDUCATION_LEVELS),
+  financialAidStatus: z.enum(CONTEXT_FINANCIAL_AID_STATUSES),
+});
+
+export type ContextInput = z.infer<typeof contextInputSchema>;

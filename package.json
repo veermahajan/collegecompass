@@ -4,11 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run verify:compass-serializer && next build",
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate",
-    "db:seed": "tsx prisma/seed.ts"
+    "db:seed": "tsx prisma/seed.ts",
+    "verify:compass-serializer": "tsx scripts/verify-compass-score-serializer.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
