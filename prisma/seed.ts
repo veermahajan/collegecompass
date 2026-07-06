@@ -1,5 +1,7 @@
+import "dotenv/config";
 import { prisma } from "../lib/prisma";
 import { GUIDANCE_CONTENT } from "./seed-data/guidance";
+import { COLLEGES } from "./seed-data/colleges";
 import { ESSAY_EXAMPLES } from "./seed-data/essays";
 import { TESTIMONIALS } from "./seed-data/testimonials";
 
@@ -12,6 +14,8 @@ import { TESTIMONIALS } from "./seed-data/testimonials";
 //     this row to exist.
 //   - GuidanceContent: the Phase B2 guidance library. Content lives in
 //     prisma/seed-data/guidance.ts — add/edit items there, not here.
+//   - College: the Phase A3 starter dataset. Lives in
+//     prisma/seed-data/colleges.ts.
 //   - EssayExample: the Phase B3 breakdown library. Content lives in
 //     prisma/seed-data/essays.ts — add/edit items there, not here.
 //   - Testimonial: the Phase B4 recent-grad tips. Content lives in
@@ -36,6 +40,14 @@ async function main() {
       where: { id: item.id },
       update: item,
       create: item,
+    });
+  }
+
+  for (const college of COLLEGES) {
+    await prisma.college.upsert({
+      where: { id: college.id },
+      update: college,
+      create: college,
     });
   }
 
