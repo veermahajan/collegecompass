@@ -30,7 +30,7 @@ export default async function TestimonialsPage() {
           One concrete tip each, from students who were just accepted.
         </p>
         <ul>
-          <li>Nikko Le (UC Berkeley, CO230): "Self-reported data doesn't work because ... people lie."</li>
+          <li>Nikko Le (UC Berkeley, CO230): &quot;Self-reported data doesn&apos;t work because ... people lie.&quot;</li>
         </ul>
 
         <CompassDivider />

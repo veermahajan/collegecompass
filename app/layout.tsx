@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter, IBM_Plex_Mono } from "next/font/google";
+import { auth } from "@/auth";
+import { Providers } from "@/components/providers";
 import "./globals.css";
 
 // Spec Sec 2: Fraunces (display, 600, headings only), Inter (body),
@@ -34,15 +36,17 @@ export const viewport: Viewport = {
   themeColor: "#FBF7EE",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const session = await auth();
+
   return (
     <html lang="en">
       <body
         className={`${fraunces.variable} ${inter.variable} ${plexMono.variable}`}
       >
-        {children}
+        <Providers session={session}>{children}</Providers>
       </body>
     </html>
   );
