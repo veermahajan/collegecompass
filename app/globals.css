@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Compass base styles — tokens live in tailwind.config.ts (spec Sec 2).
+   No dark mode in MVP; the mockup defines a single light palette. */
+
+body {
+  @apply bg-canvas text-ink font-sans antialiased;
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3 {
+  @apply font-display font-semibold text-ink;
+  letter-spacing: -0.01em;
+}

@@ -1,0 +1,176 @@
+// ============================================================
+// Compass — Data Model (LOCKED, spec Section 4)
+// Neither workflow modifies this unilaterally. If the schema is
+// wrong, STOP and flag it — do not patch around it silently.
+//
+// Ownership boundary (spec Sec 4):
+//   Workflow A migrations may touch: AcademicProfile, Course,
+//     ExtracurricularEntry, HonorAward, CompassScore, College,
+//     CollegeListEntry
+//   Workflow B migrations may touch: JournalEntry, GuidanceContent,
+//     EssayExample, Testimonial, FeedbackSubmission, ContactMessage
+//   User is SHARED and frozen after Phase A1 ships.
+// ============================================================
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  // Prisma 7: connection URL lives in prisma.config.ts (migrations)
+  // and in the Neon driver adapter passed to PrismaClient (runtime).
+  // See lib/prisma.ts and prisma.config.ts.
+}
+
+model User {
+  id                String    @id @default(cuid())
+  email             String    @unique
+  passwordHash      String
+  displayName       String
+  gradeLevel        String
+  ageConfirmed13Plus Boolean  @default(false)
+  consentSensitiveData Boolean @default(false) // explicit opt-in, see Sec 8
+  createdAt         DateTime  @default(now())
+  deletedAt         DateTime? // soft-delete flag, hard delete job runs on schedule
+
+  profile           AcademicProfile?
+  journalEntries    JournalEntry[]
+  collegeListItems  CollegeListEntry[]
+  feedbackSubmissions FeedbackSubmission[]
+}
+
+// ---- Owned primarily by Workflow A ----
+
+model AcademicProfile {
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  user              User     @relation(fields: [userId], references: [id])
+  unweightedGpa     Float?
+  ucWeightedGpa     Float?
+  satScore          Int?
+  actScore          Int?
+  courses           Course[]
+  extracurriculars  ExtracurricularEntry[]
+  honors            HonorAward[]
+  updatedAt         DateTime @updatedAt
+}
+
+model Course {
+  id            String   @id @default(cuid())
+  profileId     String
+  profile       AcademicProfile @relation(fields: [profileId], references: [id])
+  name          String
+  level         String   // Regular / Honors / AP / IB / DualEnrollment
+  gradeReceived String
+  rigorPoints   Float    // computed, see A2
+}
+
+model ExtracurricularEntry {
+  id            String   @id @default(cuid())
+  profileId     String
+  profile       AcademicProfile @relation(fields: [profileId], references: [id])
+  title         String
+  category      String
+  hoursPerWeek  Float
+  weeksPerYear  Int
+  description   String
+}
+
+model HonorAward {
+  id            String   @id @default(cuid())
+  profileId     String
+  profile       AcademicProfile @relation(fields: [profileId], references: [id])
+  title         String
+  level         String   // school / regional / state / national / international
+  year          Int
+}
+
+model CompassScore {
+  id                  String   @id @default(cuid())
+  userId              String   @unique
+  academicsScore      Float
+  honorsScore         Float
+  extracurricularsScore Float
+  essaysScore         Float
+  contextScoreEncrypted String  // AES-256 encrypted blob, server-side only. NEVER returned in any API response. See Sec 8.
+  computedAt          DateTime @updatedAt
+}
+
+model College {
+  id            String   @id @default(cuid())
+  name          String
+  avgGpaUnweighted Float?
+  avgSat        Int?
+  avgAct        Int?
+  acceptanceRate Float?
+  needBlind     Boolean  @default(false)
+}
+
+model CollegeListEntry {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  collegeId   String
+  bucket      String   // reach / target / safety
+  addedAt     DateTime @default(now())
+}
+
+// ---- Owned primarily by Workflow B ----
+
+model JournalEntry {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  title       String
+  body        String
+  tag         String?  // essay-draft / story-idea / accomplishment-log
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model GuidanceContent {
+  id          String   @id @default(cuid())
+  section     String   // rec-letters / college-list / essays / financial-aid / commonapp / majors
+  title       String
+  embedUrl    String?
+  bodyMarkdown String?
+  order       Int
+}
+
+model EssayExample {
+  id          String   @id @default(cuid())
+  fieldOfInterest String
+  essayText   String
+  breakdown   String   // why it worked / didn't
+  published   Boolean  @default(false)
+}
+
+model Testimonial {
+  id          String   @id @default(cuid())
+  graduateName String
+  schoolAdmitted String
+  quote       String
+  tipText     String
+  yearGraduated Int
+  approved    Boolean  @default(false)
+}
+
+model FeedbackSubmission {
+  id          String   @id @default(cuid())
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id])
+  message     String
+  honeypotTriggered Boolean @default(false)
+  ipHash      String   // hashed, not raw IP — Sec 8
+  createdAt   DateTime @default(now())
+}
+
+model ContactMessage {
+  id          String   @id @default(cuid())
+  fromEmail   String
+  message     String
+  respondedAt DateTime?
+  createdAt   DateTime @default(now())
+}
