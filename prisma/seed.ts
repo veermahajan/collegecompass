@@ -2,18 +2,24 @@ import "dotenv/config";
 import { prisma } from "../lib/prisma";
 import { GUIDANCE_CONTENT } from "./seed-data/guidance";
 import { COLLEGES } from "./seed-data/colleges";
+import { ESSAY_EXAMPLES } from "./seed-data/essays";
+import { TESTIMONIALS } from "./seed-data/testimonials";
 
 // Run with: npm run db:seed
 //
-// Three independent things get seeded here:
+// Independent things get seeded here:
 //   - dev-seed-user: the fixed user id lib/current-user.ts falls back to
-//     before Phase A1's real auth flow exists. Journal rows have a
-//     required FK to User, so local testing needs this row to exist.
-//   - GuidanceContent: the Phase B2 guidance library. The content itself
-//     lives in prisma/seed-data/guidance.ts — add/edit items there, not
-//     here. This file just upserts whatever's in that array.
+//     when there's no real session (local dev only, see that file).
+//     Journal rows have a required FK to User, so local testing needs
+//     this row to exist.
+//   - GuidanceContent: the Phase B2 guidance library. Content lives in
+//     prisma/seed-data/guidance.ts — add/edit items there, not here.
 //   - College: the Phase A3 starter dataset. Lives in
 //     prisma/seed-data/colleges.ts.
+//   - EssayExample: the Phase B3 breakdown library. Content lives in
+//     prisma/seed-data/essays.ts — add/edit items there, not here.
+//   - Testimonial: the Phase B4 recent-grad tips. Content lives in
+//     prisma/seed-data/testimonials.ts — add/edit items there, not here.
 
 async function main() {
   await prisma.user.upsert({
@@ -42,6 +48,22 @@ async function main() {
       where: { id: college.id },
       update: college,
       create: college,
+    });
+  }
+
+  for (const item of ESSAY_EXAMPLES) {
+    await prisma.essayExample.upsert({
+      where: { id: item.id },
+      update: item,
+      create: item,
+    });
+  }
+
+  for (const item of TESTIMONIALS) {
+    await prisma.testimonial.upsert({
+      where: { id: item.id },
+      update: item,
+      create: item,
     });
   }
 }
