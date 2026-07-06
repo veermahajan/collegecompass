@@ -29,6 +29,9 @@ export default async function TestimonialsPage() {
         <p className="mb-8 max-w-[560px] text-[1.02rem] text-ink-soft">
           One concrete tip each, from students who were just accepted.
         </p>
+        <ul>
+          <li>Nikko Le (UC Berkeley, CO230): "Self-reported data doesn't work because ... people lie."</li>
+        </ul>
 
         <CompassDivider />
 
