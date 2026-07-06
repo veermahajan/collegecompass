@@ -1,15 +1,19 @@
+import "dotenv/config";
 import { prisma } from "../lib/prisma";
 import { GUIDANCE_CONTENT } from "./seed-data/guidance";
+import { COLLEGES } from "./seed-data/colleges";
 
 // Run with: npm run db:seed
 //
-// Two independent things get seeded here:
+// Three independent things get seeded here:
 //   - dev-seed-user: the fixed user id lib/current-user.ts falls back to
 //     before Phase A1's real auth flow exists. Journal rows have a
 //     required FK to User, so local testing needs this row to exist.
 //   - GuidanceContent: the Phase B2 guidance library. The content itself
 //     lives in prisma/seed-data/guidance.ts — add/edit items there, not
 //     here. This file just upserts whatever's in that array.
+//   - College: the Phase A3 starter dataset. Lives in
+//     prisma/seed-data/colleges.ts.
 
 async function main() {
   await prisma.user.upsert({
@@ -30,6 +34,14 @@ async function main() {
       where: { id: item.id },
       update: item,
       create: item,
+    });
+  }
+
+  for (const college of COLLEGES) {
+    await prisma.college.upsert({
+      where: { id: college.id },
+      update: college,
+      create: college,
     });
   }
 }
