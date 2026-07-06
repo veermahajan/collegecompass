@@ -1,15 +1,21 @@
 import { prisma } from "../lib/prisma";
 import { GUIDANCE_CONTENT } from "./seed-data/guidance";
+import { ESSAY_EXAMPLES } from "./seed-data/essays";
+import { TESTIMONIALS } from "./seed-data/testimonials";
 
 // Run with: npm run db:seed
 //
-// Two independent things get seeded here:
+// Independent things get seeded here:
 //   - dev-seed-user: the fixed user id lib/current-user.ts falls back to
-//     before Phase A1's real auth flow exists. Journal rows have a
-//     required FK to User, so local testing needs this row to exist.
-//   - GuidanceContent: the Phase B2 guidance library. The content itself
-//     lives in prisma/seed-data/guidance.ts — add/edit items there, not
-//     here. This file just upserts whatever's in that array.
+//     when there's no real session (local dev only, see that file).
+//     Journal rows have a required FK to User, so local testing needs
+//     this row to exist.
+//   - GuidanceContent: the Phase B2 guidance library. Content lives in
+//     prisma/seed-data/guidance.ts — add/edit items there, not here.
+//   - EssayExample: the Phase B3 breakdown library. Content lives in
+//     prisma/seed-data/essays.ts — add/edit items there, not here.
+//   - Testimonial: the Phase B4 recent-grad tips. Content lives in
+//     prisma/seed-data/testimonials.ts — add/edit items there, not here.
 
 async function main() {
   await prisma.user.upsert({
@@ -27,6 +33,22 @@ async function main() {
 
   for (const item of GUIDANCE_CONTENT) {
     await prisma.guidanceContent.upsert({
+      where: { id: item.id },
+      update: item,
+      create: item,
+    });
+  }
+
+  for (const item of ESSAY_EXAMPLES) {
+    await prisma.essayExample.upsert({
+      where: { id: item.id },
+      update: item,
+      create: item,
+    });
+  }
+
+  for (const item of TESTIMONIALS) {
+    await prisma.testimonial.upsert({
       where: { id: item.id },
       update: item,
       create: item,

@@ -20,3 +20,38 @@ export async function sendPasswordResetEmail(to: string, resetUrl: string) {
     `,
   });
 }
+
+// Phase B6 — contact form notification (spec Sec 6, Workflow B). Notifies
+// founders directly so a message doesn't sit unseen; respondedAt (set
+// separately, once a founder replies) is how they track what's still
+// outstanding. Same sandbox-sender caveat as above: until a verified
+// domain exists, this can only deliver to the Resend account's own email.
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+export async function sendContactMessageNotification(fromEmail: string, message: string) {
+  const notifyTo = process.env.CONTACT_NOTIFICATION_EMAIL;
+  if (!notifyTo) {
+    console.warn(
+      "CONTACT_NOTIFICATION_EMAIL is not set — skipping contact notification email."
+    );
+    return;
+  }
+
+  await resend.emails.send({
+    from: FROM,
+    to: [notifyTo],
+    replyTo: fromEmail,
+    subject: "New Compass contact message",
+    html: `
+      <p><strong>From:</strong> ${escapeHtml(fromEmail)}</p>
+      <p>${escapeHtml(message).replace(/\n/g, "<br>")}</p>
+    `,
+  });
+}

@@ -19,6 +19,8 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Journal", href: "/journal" },
   { label: "Guidance", href: "/guidance" },
   { label: "Essays", href: "/essays" },
+  { label: "Testimonials", href: "/testimonials" },
+  { label: "Feedback", href: "/feedback" },
   { label: "Contact", href: "/contact" },
 ];
 
