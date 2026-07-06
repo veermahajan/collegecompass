@@ -14,6 +14,12 @@ import type { GuidanceSectionSlug } from "../../lib/guidance-sections";
 // in Geetansh/Veer's voice (spec Sec 1: recency and relatability), not
 // generic copy, so it's deliberately left as a stub rather than written
 // here. embedUrl is optional — omit it for a text-only item.
+//
+// Each item below already has a placeholder embedUrl wired up as a ready
+// template: swap "REPLACE_WITH_YOUTUBE_ID" for the real YouTube video ID
+// (or any other iframe-embeddable URL) and rewrite bodyMarkdown/title —
+// no other code changes needed for the video to show up on /guidance.
+// Delete the embedUrl line entirely on any item that should stay text-only.
 
 export type GuidanceSeedItem = {
   id: string;
@@ -30,6 +36,7 @@ export const GUIDANCE_CONTENT: GuidanceSeedItem[] = [
     section: "rec-letters",
     title: "How to ask for a strong recommendation letter",
     order: 1,
+    embedUrl: "https://www.youtube.com/embed/REPLACE_WITH_YOUTUBE_ID",
     bodyMarkdown: "PLACEHOLDER — replace with your own advice on rec letters.",
   },
   {
@@ -37,6 +44,7 @@ export const GUIDANCE_CONTENT: GuidanceSeedItem[] = [
     section: "college-list",
     title: "Building a college list that actually fits you",
     order: 1,
+    embedUrl: "https://www.youtube.com/embed/REPLACE_WITH_YOUTUBE_ID",
     bodyMarkdown: "PLACEHOLDER — replace with your own advice on building a list.",
   },
   {
@@ -44,6 +52,7 @@ export const GUIDANCE_CONTENT: GuidanceSeedItem[] = [
     section: "reaches-targets-safeties",
     title: "What reach, target, and safety actually mean",
     order: 1,
+    embedUrl: "https://www.youtube.com/embed/REPLACE_WITH_YOUTUBE_ID",
     bodyMarkdown: "PLACEHOLDER — replace with your own advice on the three buckets.",
   },
   {
@@ -51,6 +60,7 @@ export const GUIDANCE_CONTENT: GuidanceSeedItem[] = [
     section: "essays",
     title: "Starting a personal statement without a template",
     order: 1,
+    embedUrl: "https://www.youtube.com/embed/REPLACE_WITH_YOUTUBE_ID",
     bodyMarkdown: "PLACEHOLDER — replace with your own essay-writing advice.",
   },
   {
@@ -58,6 +68,7 @@ export const GUIDANCE_CONTENT: GuidanceSeedItem[] = [
     section: "commonapp",
     title: "Walking through the CommonApp, section by section",
     order: 1,
+    embedUrl: "https://www.youtube.com/embed/REPLACE_WITH_YOUTUBE_ID",
     bodyMarkdown: "PLACEHOLDER — replace with your own CommonApp walkthrough.",
   },
   {
@@ -65,6 +76,7 @@ export const GUIDANCE_CONTENT: GuidanceSeedItem[] = [
     section: "ed-rd",
     title: "ED, EA, and RD — what's actually binding",
     order: 1,
+    embedUrl: "https://www.youtube.com/embed/REPLACE_WITH_YOUTUBE_ID",
     bodyMarkdown: "PLACEHOLDER — replace with your own ED/RD explainer.",
   },
   {
@@ -72,6 +84,7 @@ export const GUIDANCE_CONTENT: GuidanceSeedItem[] = [
     section: "financial-aid",
     title: "Reading a financial aid offer",
     order: 1,
+    embedUrl: "https://www.youtube.com/embed/REPLACE_WITH_YOUTUBE_ID",
     bodyMarkdown: "PLACEHOLDER — replace with your own financial aid advice.",
   },
   {
@@ -79,6 +92,7 @@ export const GUIDANCE_CONTENT: GuidanceSeedItem[] = [
     section: "majors",
     title: "Choosing a major (or leaving it undeclared)",
     order: 1,
+    embedUrl: "https://www.youtube.com/embed/REPLACE_WITH_YOUTUBE_ID",
     bodyMarkdown: "PLACEHOLDER — replace with your own advice on choosing majors.",
   },
 ];
