@@ -34,13 +34,13 @@ export default function FeedbackPage() {
       });
 
       if (res.status === 429) {
-        setError("You've sent a few of these already — try again in a bit.");
+        setError("You've sent a lot of messages, please wait and try again in a bit.");
         setStatus("error");
         return;
       }
 
       if (!res.ok) {
-        setError("Something went wrong. Try again.");
+        setError("Something went wrong. Try again later.");
         setStatus("error");
         return;
       }
@@ -59,13 +59,12 @@ export default function FeedbackPage() {
       <main className="mx-auto max-w-[560px] px-6 py-16">
         <h1 className="mb-2 text-3xl">Tell us what&apos;s not working</h1>
         <p className="mb-8 text-[0.95rem] text-ink-soft">
-          Short and specific is great. This goes straight to the people
-          building Compass, not a ticket queue.
+          The shorter and the more specific, the better. Your messages go straight to us building and managing College Compass, not a ticket queue or bot.
         </p>
 
         {status === "done" ? (
           <p className="rounded-xl border border-line bg-white p-4 text-[0.95rem] text-ink">
-            Thanks — we read every one of these.
+            Thanks for submitting your feedback. We read and learn from every one of these messages.
           </p>
         ) : (
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
