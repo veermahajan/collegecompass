@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your College Blueprint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FAF8F5;
+    --navy:#0F172A;
+    --blue:#3B82F6;
+    --cyan:#22D3EE;
+    --slate:#1E293B;
+    --grid-line: rgba(15,23,42,0.05);
+    --hair: rgba(15,23,42,0.12);
+    --card-bg:#FFFFFF;
+    --radius:10px;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    background:var(--bg);
+    color:var(--slate);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    position:relative;
+  }
+
+  #ambient-canvas{
+    position:fixed;inset:0;
+    width:100%;height:100%;
+    z-index:0;
+    pointer-events:none;
+    opacity:0.55;
+  }
+
+  body::before{
+    content:'';
+    position:fixed;inset:0;
+    z-index:0;
+    pointer-events:none;
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size:48px 48px;
+  }
+
+  header, .hero, section, footer{
+    position:relative;
+    z-index:1;
+  }
+
+  h1,h2,h3{
+    font-family:'Space Grotesk',sans-serif;
+    color:var(--navy);
+    letter-spacing:-0.02em;
+  }
+
+  .mono{font-family:'IBM Plex Mono',monospace;}
+
+  a{color:inherit;text-decoration:none;}
+
+  .wrap{
+    max-width:1180px;
+    margin:0 auto;
+    padding:0 32px;
+  }
+
+  ::selection{background:var(--cyan);color:var(--navy);}
+
+  /* focus visibility */
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible{
+    outline:2px solid var(--blue);
+    outline-offset:3px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important;}
+  }
+
+  /* ---------- NAV ---------- */
+  header{
+    position:fixed;top:0;left:0;right:0;
+    z-index:100;
+    background:rgba(250,248,245,0.82);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--hair);
+  }
+  .navbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 32px;
+    max-width:1180px;margin:0 auto;
+  }
+  .logo{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:600;font-size:18px;color:var(--navy);
+    display:flex;align-items:center;gap:8px;
+  }
+  .logo svg{width:20px;height:20px;}
+  .navlinks{display:flex;gap:32px;font-size:14px;font-weight:500;}
+  .navlinks a{
+    position:relative;
+    color:var(--slate);opacity:0.75;transition:opacity .2s;
+    padding-bottom:2px;
+  }
+  .navlinks a::after{
+    content:'';
+    position:absolute;left:0;bottom:-2px;
+    width:0;height:1.5px;
+    background:var(--blue);
+    transition:width .25s ease;
+  }
+  .navlinks a:hover{opacity:1;color:var(--blue);}
+  .navlinks a:hover::after{width:100%;}
+  .nav-cta{
+    font-size:14px;font-weight:600;color:#fff;background:var(--navy);
+    padding:9px 18px;border-radius:6px;transition:background .2s, transform .2s;
+  }
+  .nav-cta:hover{background:var(--blue);}
+  .navmobile{display:none;}
+
+  @media (max-width:860px){
+    .navlinks{display:none;}
+  }
+
+  /* ---------- BUTTONS ---------- */
+  .btn{
+    position:relative;
+    overflow:hidden;
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:15px;font-weight:600;font-family:'Inter',sans-serif;
+    padding:14px 26px;border-radius:7px;
+    cursor:pointer;border:none;
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .btn-primary{
+    background:var(--navy);color:#fff;
+    box-shadow:0 0 0 rgba(59,130,246,0);
+  }
+  .btn-primary:hover{
+    transform:translateY(-2px);
+    box-shadow:0 10px 30px -8px rgba(59,130,246,0.55);
+  }
+  .btn-secondary{
+    background:transparent;color:var(--navy);
+    border:1.5px solid var(--hair);
+  }
+  .btn-secondary:hover{
+    border-color:var(--navy);
+    transform:translateY(-2px);
+  }
+  .ripple{
+    position:absolute;border-radius:50%;
+    background:rgba(255,255,255,0.55);
+    transform:scale(0);
+    animation:rippleAnim .6s ease-out;
+    pointer-events:none;
+  }
+  @keyframes rippleAnim{
+    to{transform:scale(3);opacity:0;}
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    min-height:100vh;
+    display:flex;align-items:center;
+    padding-top:96px;
+    position:relative;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:40px;
+    align-items:center;
+    width:100%;
+  }
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;letter-spacing:0.08em;text-transform:uppercase;
+    color:var(--blue);
+    border:1px solid rgba(59,130,246,0.3);
+    background:rgba(59,130,246,0.06);
+    padding:6px 12px;border-radius:20px;
+    margin-bottom:22px;
+  }
+  .eyebrow::before{
+    content:'';width:6px;height:6px;border-radius:50%;background:var(--cyan);
+    box-shadow:0 0 0 3px rgba(34,211,238,0.25);
+  }
+  .hero h1{
+    font-size:clamp(40px,5.4vw,68px);
+    line-height:1.03;
+    font-weight:600;
+    margin-bottom:22px;
+  }
+  .hero h1 .accent{color:var(--blue);}
+  .hero p.sub{
+    font-size:18px;line-height:1.6;
+    color:var(--slate);opacity:0.8;
+    max-width:460px;
+    margin-bottom:34px;
+  }
+  .hero-ctas{display:flex;gap:16px;flex-wrap:wrap;}
+
+  .blueprint-panel{
+    position:relative;
+    aspect-ratio:1/1;
+    border:1px solid var(--hair);
+    border-radius:16px;
+    background:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size:28px 28px;
+    background-color:rgba(15,23,42,0.015);
+    overflow:hidden;
+  }
+  .blueprint-panel::before{
+    content:'';
+    position:absolute;inset:0;
+    background:radial-gradient(circle at 50% 50%, rgba(59,130,246,0.06), transparent 60%);
+  }
+  .bp-svg{width:100%;height:100%;position:relative;z-index:2;}
+
+  .node{
+    cursor:default;
+    transition:transform .35s ease;
+    transform-box:fill-box;
+    transform-origin:center;
+  }
+  .node:hover{transform:scale(1.14);}
+  .node circle{transition:filter .3s ease;}
+  .node:hover circle{filter:drop-shadow(0 0 8px rgba(59,130,246,0.6));}
+  .node text{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:9.5px;
+    fill:var(--navy);
+    pointer-events:none;
+  }
+  .conn-line{
+    stroke:var(--hair);
+    stroke-width:1.2;
+    transition:stroke .3s ease, stroke-width .3s ease;
+  }
+  .conn-line.lit{stroke:var(--blue);stroke-width:1.6;}
+
+  @keyframes floatY{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-6px);}
+  }
+
+  @media (max-width:900px){
+    .hero-grid{grid-template-columns:1fr;}
+    .blueprint-panel{order:-1;max-width:440px;margin:0 auto;}
+  }
+
+  .trust-strip{
+    display:flex;align-items:center;
+    gap:36px;
+    margin-top:72px;
+    padding-top:32px;
+    border-top:1px dashed var(--hair);
+  }
+  .trust-item{display:flex;flex-direction:column;gap:4px;}
+  .trust-num{font-size:22px;font-weight:600;color:var(--navy);}
+  .trust-label{font-size:13px;color:var(--slate);opacity:0.65;}
+  .trust-div{width:1px;height:32px;background:var(--hair);}
+
+  @media (max-width:700px){
+    .trust-strip{flex-wrap:wrap;gap:20px;margin-top:48px;}
+    .trust-div{display:none;}
+  }
+
+  /* ---------- SECTION SCAFFOLD ---------- */
+  section{
+    padding:120px 0;
+    position:relative;
+  }
+  .section-head{
+    max-width:640px;
+    margin-bottom:64px;
+  }
+  .section-tag{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;letter-spacing:0.1em;text-transform:uppercase;
+    color:var(--blue);margin-bottom:14px;display:block;
+  }
+  .section-head h2{
+    font-size:clamp(30px,3.6vw,44px);
+    font-weight:600;
+    line-height:1.1;
+    margin-bottom:16px;
+  }
+  .section-head p{
+    font-size:17px;color:var(--slate);opacity:0.75;line-height:1.6;
+  }
+
+  .reveal{
+    opacity:0;transform:translateY(28px);
+    transition:opacity .8s ease, transform .8s ease;
+  }
+  .reveal.in{opacity:1;transform:translateY(0);}
+
+  .connector-draw{
+    stroke-dasharray:600;
+    stroke-dashoffset:600;
+    transition:stroke-dashoffset 1.4s ease;
+  }
+  .connector-draw.drawn{stroke-dashoffset:0;}
+
+  /* ---------- ROADMAP ---------- */
+  .roadmap{display:flex;flex-direction:column;gap:0;}
+  .stage{
+    border:1px solid var(--hair);
+    border-radius:12px;
+    margin-bottom:14px;
+    background:var(--card-bg);
+    overflow:hidden;
+    transition:border-color .3s ease, box-shadow .3s ease;
+  }
+  .stage.open, .stage:hover{
+    border-color:rgba(59,130,246,0.35);
+    box-shadow:0 8px 28px -14px rgba(15,23,42,0.18);
+  }
+  .stage-head{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:26px 30px;
+    cursor:pointer;
+  }
+  .stage-head-left{display:flex;align-items:center;gap:20px;}
+  .stage-num{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13px;color:var(--blue);
+    border:1px solid rgba(59,130,246,0.3);
+    width:38px;height:38px;border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .stage-head h3{font-size:21px;font-weight:600;}
+  .stage-head span.yr-tag{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;color:var(--slate);opacity:0.5;
+  }
+  .chevron{
+    width:18px;height:18px;
+    transition:transform .35s ease;
+    color:var(--navy);opacity:0.6;flex-shrink:0;
+  }
+  .stage.open .chevron{transform:rotate(180deg);}
+
+  .stage-body{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height .5s cubic-bezier(.4,0,.2,1);
+  }
+  .stage.open .stage-body{max-height:400px;}
+  .milestones{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:12px;
+    padding:0 30px 28px 30px;
+  }
+  .milestone{
+    border:1px solid var(--hair);
+    border-left:3px solid var(--cyan);
+    border-radius:6px;
+    padding:14px 16px;
+    font-size:14px;
+    background:rgba(34,211,238,0.03);
+  }
+
+  /* ---------- DECISION TREE ---------- */
+  .decision-box{
+    border:1px solid var(--hair);
+    border-radius:16px;
+    background:var(--card-bg);
+    padding:44px;
+  }
+  .decision-questions{
+    display:grid;grid-template-columns:repeat(3,1fr);
+    gap:24px;margin-bottom:36px;
+  }
+  .dq label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;text-transform:uppercase;letter-spacing:0.06em;
+    color:var(--blue);display:block;margin-bottom:10px;
+  }
+  .dq select{
+    width:100%;
+    font-family:'Inter',sans-serif;
+    font-size:15px;
+    padding:12px 14px;
+    border-radius:7px;
+    border:1.5px solid var(--hair);
+    background:var(--bg);
+    color:var(--navy);
+    cursor:pointer;
+  }
+  .dq select:hover{border-color:var(--blue);}
+
+  #decision-result{
+    border-top:1px dashed var(--hair);
+    padding-top:32px;
+    display:none;
+  }
+  #decision-result.show{display:block;}
+  .result-title{font-size:20px;font-weight:600;margin-bottom:18px;color:var(--navy);}
+  .result-list{display:flex;flex-direction:column;gap:10px;}
+  .result-item{
+    display:flex;align-items:center;gap:14px;
+    font-size:15px;
+    padding:14px 18px;
+    border:1px solid var(--hair);
+    border-radius:8px;
+    opacity:0;transform:translateX(-10px);
+    animation:slideIn .5s ease forwards;
+  }
+  .result-item .step-idx{
+    font-family:'IBM Plex Mono',monospace;
+    color:var(--blue);font-size:13px;
+    width:26px;flex-shrink:0;
+  }
+  @keyframes slideIn{to{opacity:1;transform:translateX(0);}}
+
+  @media (max-width:760px){
+    .decision-questions{grid-template-columns:1fr;}
+    .decision-box{padding:28px;}
+  }
+
+  /* ---------- RESOURCES ---------- */
+  .resource-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);
+    gap:24px;
+  }
+  .rcard{
+    position:relative;
+    border:1px solid var(--hair);
+    border-radius:12px;
+    background:var(--card-bg);
+    padding:30px;
+    overflow:hidden;
+    transition:transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+  }
+  .rcard::before{
+    content:'';
+    position:absolute;inset:0;
+    background:radial-gradient(180px circle at var(--mx,50%) var(--my,50%), rgba(59,130,246,0.08), transparent 70%);
+    opacity:0;
+    transition:opacity .3s ease;
+    pointer-events:none;
+  }
+  .rcard:hover::before{opacity:1;}
+  .rcard:hover{
+    transform:translateY(-7px);
+    box-shadow:0 18px 40px -18px rgba(15,23,42,0.22);
+    border-color:rgba(59,130,246,0.3);
+  }
+  .rcard .icon{
+    width:42px;height:42px;
+    border-radius:9px;
+    background:rgba(59,130,246,0.08);
+    display:flex;align-items:center;justify-content:center;
+    margin-bottom:20px;
+    transition:transform .3s ease;
+  }
+  .rcard:hover .icon{transform:rotate(6deg);}
+  .rcard .icon svg{width:20px;height:20px;color:var(--blue);}
+  .rcard h3{font-size:17px;margin-bottom:8px;}
+  .rcard p{font-size:14px;color:var(--slate);opacity:0.72;line-height:1.55;}
+
+  @media (max-width:900px){
+    .resource-grid{grid-template-columns:repeat(2,1fr);}
+  }
+  @media (max-width:600px){
+    .resource-grid{grid-template-columns:1fr;}
+  }
+
+  /* ---------- IMPACT ---------- */
+  .impact-section{
+    background:var(--navy);
+    border-radius:20px;
+    margin:0 32px;
+    width:auto;
+    padding:80px 40px;
+  }
+  .impact-section .wrap{max-width:1000px;padding:0;}
+  .impact-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);
+    gap:32px;text-align:center;
+  }
+  .impact-num{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:clamp(32px,4vw,46px);
+    font-weight:600;color:#fff;
+    margin-bottom:10px;
+  }
+  .impact-label{
+    font-size:14px;color:rgba(255,255,255,0.6);
+  }
+  @media (max-width:760px){
+    .impact-grid{grid-template-columns:repeat(2,1fr);row-gap:44px;}
+  }
+
+  /* ---------- TESTIMONIALS ---------- */
+  .testi-field{
+    position:relative;
+    min-height:520px;
+  }
+  .testi-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+  .testi-card{
+    position:absolute;
+    width:270px;
+    border:1px solid var(--hair);
+    background:var(--card-bg);
+    border-radius:10px;
+    padding:22px;
+    box-shadow:0 12px 30px -16px rgba(15,23,42,0.2);
+  }
+  .testi-card .pin{
+    position:absolute;top:-6px;left:22px;
+    width:11px;height:11px;border-radius:50%;
+    background:var(--cyan);
+    box-shadow:0 0 0 4px rgba(34,211,238,0.2);
+  }
+  .testi-quote{font-size:14.5px;line-height:1.55;color:var(--slate);margin-bottom:14px;}
+  .testi-name{font-weight:600;font-size:14px;color:var(--navy);}
+  .testi-outcome{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;color:var(--blue);margin-top:2px;
+  }
+
+  .t1{top:0;left:2%;}
+  .t2{top:60px;right:4%;}
+  .t3{bottom:20px;left:26%;}
+
+  @media (max-width:900px){
+    .testi-field{min-height:auto;}
+    .testi-svg{display:none;}
+    .testi-card{position:static;width:100%;margin-bottom:20px;}
+  }
+
+  /* ---------- CTA STRIP ---------- */
+  .cta-strip{
+    text-align:center;
+    padding:100px 0;
+  }
+  .cta-strip h2{font-size:clamp(28px,3.6vw,42px);margin-bottom:20px;}
+  .cta-strip p{font-size:17px;opacity:0.75;margin-bottom:34px;}
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    border-top:1px solid var(--hair);
+    padding:56px 0 36px 0;
+  }
+  .footer-top{
+    display:flex;justify-content:space-between;align-items:flex-start;
+    flex-wrap:wrap;gap:32px;
+    padding-bottom:36px;
+    border-bottom:1px dashed var(--hair);
+    margin-bottom:28px;
+  }
+  .footer-mission{max-width:340px;font-size:14px;opacity:0.65;line-height:1.6;margin-top:12px;}
+  .footer-nav{display:flex;gap:48px;flex-wrap:wrap;}
+  .footer-col h4{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;text-transform:uppercase;letter-spacing:0.08em;
+    color:var(--blue);margin-bottom:14px;
+  }
+  .footer-col a{
+    display:block;font-size:14px;opacity:0.7;margin-bottom:10px;transition:opacity .2s;
+  }
+  .footer-col a:hover{opacity:1;color:var(--blue);}
+  .footer-bottom{
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;
+  }
+  .socials{display:flex;gap:14px;}
+  .socials a{
+    width:34px;height:34px;border:1px solid var(--hair);border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+    transition:border-color .2s, transform .2s;
+  }
+  .socials a:hover{border-color:var(--blue);transform:translateY(-2px);}
+  .socials svg{width:15px;height:15px;color:var(--navy);}
+  .copyright{font-size:13px;opacity:0.5;}
+
+</style>
+</head>
+<body>
+
+<canvas id="ambient-canvas" aria-hidden="true"></canvas>
+
+<header>
+  <div class="navbar">
+    <div class="logo">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="2" width="20" height="20" rx="4" stroke="#3B82F6" stroke-width="1.6"/>
+        <path d="M7 12H17M12 7V17" stroke="#3B82F6" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+      Blueprint
+    </div>
+    <nav class="navlinks">
+      <a href="#roadmap">Roadmap</a>
+      <a href="#decision">Get Guidance</a>
+      <a href="#resources">Resources</a>
+      <a href="#testimonials">Stories</a>
+    </nav>
+    <a href="#decision" class="nav-cta">Start Your Roadmap</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <span class="eyebrow">Free · No sign-up required</span>
+        <h1>Your College <span class="accent">Blueprint</span></h1>
+        <p class="sub">Free guidance, resources, and personalized roadmaps to help every student build a stronger college application.</p>
+        <div class="hero-ctas">
+          <a href="#decision" class="btn btn-primary">Start Your Roadmap</a>
+          <a href="#resources" class="btn btn-secondary">Browse Resources</a>
+        </div>
+      </div>
+      <div class="blueprint-panel">
+        <svg class="bp-svg" viewBox="0 0 400 400" id="hero-svg">
+          <!-- connector lines drawn dynamically by JS group -->
+          <g id="hero-lines"></g>
+          <g id="hero-nodes"></g>
+        </svg>
+      </div>
+    </div>
+
+    <div class="trust-strip reveal">
+      <div class="trust-item">
+        <span class="trust-num mono">100%</span>
+        <span class="trust-label">Free, always</span>
+      </div>
+      <div class="trust-div"></div>
+      <div class="trust-item">
+        <span class="trust-num mono">500+</span>
+        <span class="trust-label">Guides &amp; resources</span>
+      </div>
+      <div class="trust-div"></div>
+      <div class="trust-item">
+        <span class="trust-num mono">4</span>
+        <span class="trust-label">Years, mapped step by step</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section id="roadmap">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="section-tag">Four-Year Plan</span>
+      <h2>Every stage, mapped out.</h2>
+      <p>Click a year to expand its blueprint and see exactly what matters most, when.</p>
+    </div>
+
+    <div class="roadmap">
+      <div class="stage reveal" data-stage="0">
+        <div class="stage-head">
+          <div class="stage-head-left">
+            <span class="stage-num">01</span>
+            <h3>Freshman <span class="yr-tag">— Foundation</span></h3>
+          </div>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none"><path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <div class="stage-body">
+          <div class="milestones">
+            <div class="milestone">Take challenging coursework</div>
+            <div class="milestone">Explore extracurriculars broadly</div>
+            <div class="milestone">Build strong study habits</div>
+            <div class="milestone">Start a reading & interest journal</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage reveal" data-stage="1">
+        <div class="stage-head">
+          <div class="stage-head-left">
+            <span class="stage-num">02</span>
+            <h3>Sophomore <span class="yr-tag">— Depth</span></h3>
+          </div>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none"><path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <div class="stage-body">
+          <div class="milestones">
+            <div class="milestone">Deepen 1–2 extracurriculars</div>
+            <div class="milestone">Take a PSAT practice test</div>
+            <div class="milestone">Research summer programs</div>
+            <div class="milestone">Consider a leadership role</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage reveal" data-stage="2">
+        <div class="stage-head">
+          <div class="stage-head-left">
+            <span class="stage-num">03</span>
+            <h3>Junior <span class="yr-tag">— Momentum</span></h3>
+          </div>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none"><path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <div class="stage-body">
+          <div class="milestones">
+            <div class="milestone">Prepare for standardized tests</div>
+            <div class="milestone">Begin college research</div>
+            <div class="milestone">Request recommendation letters</div>
+            <div class="milestone">Start brainstorming essays</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage reveal" data-stage="3">
+        <div class="stage-head">
+          <div class="stage-head-left">
+            <span class="stage-num">04</span>
+            <h3>Senior <span class="yr-tag">— Execution</span></h3>
+          </div>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none"><path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <div class="stage-body">
+          <div class="milestones">
+            <div class="milestone">Finalize your college list</div>
+            <div class="milestone">Write & revise essays</div>
+            <div class="milestone">Apply for scholarships</div>
+            <div class="milestone">Submit applications on time</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DECISION TREE -->
+<section id="decision">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="section-tag">Personalized Guidance</span>
+      <h2>What should I work on next?</h2>
+      <p>Answer three questions. Get a directional next-step plan — a compass, not a prediction, for exactly where you are.</p>
+    </div>
+
+    <div class="decision-box reveal">
+      <div class="decision-questions">
+        <div class="dq">
+          <label>Current grade</label>
+          <select id="q-grade">
+            <option value="freshman">Freshman</option>
+            <option value="sophomore">Sophomore</option>
+            <option value="junior" selected>Junior</option>
+            <option value="senior">Senior</option>
+          </select>
+        </div>
+        <div class="dq">
+          <label>Primary goal</label>
+          <select id="q-goal">
+            <option value="reach">Get into a reach school</option>
+            <option value="scholarship">Maximize scholarships</option>
+            <option value="fit">Find the right fit</option>
+            <option value="undecided">Still figuring it out</option>
+          </select>
+        </div>
+        <div class="dq">
+          <label>Biggest concern</label>
+          <select id="q-concern">
+            <option value="essays">Essays</option>
+            <option value="scores">Test scores</option>
+            <option value="activities">Extracurriculars</option>
+            <option value="money">Affordability</option>
+          </select>
+        </div>
+      </div>
+      <a href="#" class="btn btn-primary" id="build-roadmap-btn">Build My Roadmap</a>
+
+      <div id="decision-result">
+        <div class="result-title">Your next steps</div>
+        <div class="result-list" id="result-list"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESOURCES -->
+<section id="resources">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="section-tag">Featured Resources</span>
+      <h2>Everything you need, free.</h2>
+      <p>Every guide, list, and template our counselors actually use with students.</p>
+    </div>
+
+    <div class="resource-grid">
+      <div class="rcard reveal">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 4h11l5 5v11H4V4z" stroke="currentColor" stroke-width="1.6"/><path d="M15 4v5h5" stroke="currentColor" stroke-width="1.6"/></svg></div>
+        <h3>Essay Library</h3>
+        <p>Real personal statements and supplements, annotated to show what worked.</p>
+      </div>
+      <div class="rcard reveal">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L3 7v6c0 5 4 8 9 9 5-1 9-4 9-9V7l-9-5z" stroke="currentColor" stroke-width="1.6"/></svg></div>
+        <h3>Scholarship Database</h3>
+        <p>Searchable, filterable listings updated weekly with real deadlines.</p>
+      </div>
+      <div class="rcard reveal">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+        <h3>Summer Programs</h3>
+        <p>A vetted list of programs by subject, cost, and selectivity.</p>
+      </div>
+      <div class="rcard reveal">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="M9 18l-5-6 5-6M15 6l5 6-5 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Research Opportunities</h3>
+        <p>How to find and reach out to labs, mentors, and independent projects.</p>
+      </div>
+      <div class="rcard reveal">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.6"/></svg></div>
+        <h3>Interview Preparation</h3>
+        <p>Common questions, mock scripts, and what admissions officers notice.</p>
+      </div>
+      <div class="rcard reveal">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19V5M4 5l4 4M4 5l-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 5v14M20 19l-4-4M20 19l4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>SAT / ACT Resources</h3>
+        <p>Free practice sets, score calculators, and study schedules.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IMPACT -->
+<section>
+  <div class="impact-section reveal">
+    <div class="wrap">
+      <div class="impact-grid">
+        <div>
+          <div class="impact-num" data-target="10000" data-suffix="+">0</div>
+          <div class="impact-label">Students Helped</div>
+        </div>
+        <div>
+          <div class="impact-num" data-target="100" data-suffix="%">0</div>
+          <div class="impact-label">Free Resources</div>
+        </div>
+        <div>
+          <div class="impact-num" data-target="500" data-suffix="+">0</div>
+          <div class="impact-label">Guides</div>
+        </div>
+        <div>
+          <div class="impact-num" data-target="200" data-suffix="+">0</div>
+          <div class="impact-label">Scholarships Listed</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="section-tag">Student Outcomes</span>
+      <h2>Pinned to the blueprint.</h2>
+      <p>Real students, real outcomes, annotated the way we track every plan.</p>
+    </div>
+
+    <div class="testi-field reveal">
+      <svg class="testi-svg" viewBox="0 0 1000 520">
+        <path class="conn-line connector-draw" d="M 160 40 Q 300 140 480 220" fill="none"/>
+        <path class="conn-line connector-draw" d="M 780 100 Q 650 200 500 260" fill="none"/>
+        <path class="conn-line connector-draw" d="M 400 440 Q 460 350 500 260" fill="none"/>
+      </svg>
+      <div class="testi-card t1">
+        <div class="pin"></div>
+        <div class="testi-quote">"I had no idea how to start my essays. The library gave me a real structure to follow."</div>
+        <div class="testi-name">Priya M.</div>
+        <div class="testi-outcome">Admitted — UC Berkeley</div>
+      </div>
+      <div class="testi-card t2">
+        <div class="pin"></div>
+        <div class="testi-quote">"The scholarship database covered almost every dollar of my tuition."</div>
+        <div class="testi-name">Marcus T.</div>
+        <div class="testi-outcome">$48,000 in aid secured</div>
+      </div>
+      <div class="testi-card t3">
+        <div class="pin"></div>
+        <div class="testi-quote">"The four-year roadmap took the guesswork out of every single year."</div>
+        <div class="testi-name">Elena R.</div>
+        <div class="testi-outcome">Admitted — Georgia Tech</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="cta-strip reveal">
+  <div class="wrap">
+    <h2>Ready to draft your blueprint?</h2>
+    <p>It's free, it takes two minutes, and it's built around your actual answers.</p>
+    <a href="#decision" class="btn btn-primary">Start Your Roadmap</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div>
+        <div class="logo">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="4" stroke="#3B82F6" stroke-width="1.6"/><path d="M7 12H17M12 7V17" stroke="#3B82F6" stroke-width="1.6" stroke-linecap="round"/></svg>
+          Blueprint
+        </div>
+        <p class="footer-mission">Free college guidance for every student, built like an engineering plan — precise, structured, and made to be followed.</p>
+      </div>
+      <div class="footer-nav">
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <a href="#roadmap">Roadmap</a>
+          <a href="#decision">Get Guidance</a>
+          <a href="#resources">Resources</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="#resources">Essay Library</a>
+          <a href="#resources">Scholarships</a>
+          <a href="#resources">SAT / ACT</a>
+        </div>
+        <div class="footer-col">
+          <h4>About</h4>
+          <a href="#testimonials">Student Stories</a>
+          <a href="#">Our Mission</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="copyright">© 2026 Blueprint. All resources free, always.</span>
+      <div class="socials">
+        <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 4.5c-.8.4-1.6.6-2.5.8.9-.5 1.6-1.4 1.9-2.4-.8.5-1.8.9-2.7 1.1A4.3 4.3 0 0 0 12.9 8c0 .3 0 .7.1 1A12 12 0 0 1 2 3.9a4.3 4.3 0 0 0 1.3 5.7c-.7 0-1.4-.2-2-.5v.1c0 2 1.5 3.8 3.4 4.1-.6.2-1.3.2-1.9.1.5 1.7 2.1 2.9 4 3A8.6 8.6 0 0 1 0 18.4 12 12 0 0 0 6.6 20c7.9 0 12.2-6.6 12.2-12.2v-.6c.9-.6 1.6-1.4 2.2-2.3z"/></svg></a>
+        <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+        <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5A2.5 2.5 0 1 1 0 3.5a2.5 2.5 0 0 1 4.98 0zM.5 8h4.9V23H.5V8zM8.5 8h4.7v2.05h.07c.66-1.2 2.27-2.47 4.68-2.47 5 0 5.93 3.16 5.93 7.27V23h-4.9v-6.94c0-1.66 0-3.8-2.3-3.8-2.32 0-2.68 1.8-2.68 3.67V23H8.5V8z"/></svg></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ---------- Ambient background network ----------
+(function(){
+  const canvas = document.getElementById('ambient-canvas');
+  const ctx = canvas.getContext('2d');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let w,h,dpr;
+  let points = [];
+
+  function resize(){
+    dpr = Math.min(window.devicePixelRatio||1, 2);
+    w = window.innerWidth; h = window.innerHeight;
+    canvas.width = w*dpr; canvas.height = h*dpr;
+    canvas.style.width = w+'px'; canvas.style.height = h+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    const count = Math.min(70, Math.floor((w*h)/22000));
+    points = Array.from({length:count},()=>({
+      x:Math.random()*w, y:Math.random()*h,
+      vx:(Math.random()-0.5)*0.12, vy:(Math.random()-0.5)*0.12,
+      r: Math.random()*1.4+0.6
+    }));
+  }
+
+  const mouse = {x:-9999,y:-9999};
+  window.addEventListener('mousemove', e=>{mouse.x=e.clientX;mouse.y=e.clientY;});
+  window.addEventListener('mouseleave', ()=>{mouse.x=-9999;mouse.y=-9999;});
+
+  function step(){
+    ctx.clearRect(0,0,w,h);
+    for(const p of points){
+      p.x += p.vx; p.y += p.vy;
+      if(p.x<0) p.x=w; if(p.x>w) p.x=0;
+      if(p.y<0) p.y=h; if(p.y>h) p.y=0;
+    }
+    for(let i=0;i<points.length;i++){
+      for(let j=i+1;j<points.length;j++){
+        const a=points[i], b=points[j];
+        const dx=a.x-b.x, dy=a.y-b.y;
+        const dist = Math.sqrt(dx*dx+dy*dy);
+        if(dist<130){
+          ctx.strokeStyle = `rgba(59,130,246,${0.09*(1-dist/130)})`;
+          ctx.lineWidth=1;
+          ctx.beginPath();
+          ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
+          ctx.stroke();
+        }
+      }
+      const dmx = points[i].x-mouse.x, dmy = points[i].y-mouse.y;
+      const dm = Math.sqrt(dmx*dmx+dmy*dmy);
+      if(dm<160){
+        ctx.strokeStyle = `rgba(34,211,238,${0.16*(1-dm/160)})`;
+        ctx.beginPath();
+        ctx.moveTo(points[i].x,points[i].y); ctx.lineTo(mouse.x,mouse.y);
+        ctx.stroke();
+      }
+    }
+    for(const p of points){
+      ctx.fillStyle='rgba(15,23,42,0.28)';
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fill();
+    }
+    if(!reduceMotion) requestAnimationFrame(step);
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  step();
+  if(reduceMotion){
+    // draw a single static frame, no loop
+  }
+})();
+
+// ---------- Card spotlight tracking ----------
+document.querySelectorAll('.rcard').forEach(card=>{
+  card.addEventListener('mousemove', function(e){
+    const rect = this.getBoundingClientRect();
+    this.style.setProperty('--mx', (e.clientX-rect.left)+'px');
+    this.style.setProperty('--my', (e.clientY-rect.top)+'px');
+  });
+});
+
+// ---------- Magnetic buttons ----------
+document.querySelectorAll('.btn').forEach(btn=>{
+  btn.addEventListener('mousemove', function(e){
+    const rect = this.getBoundingClientRect();
+    const relX = e.clientX - rect.left - rect.width/2;
+    const relY = e.clientY - rect.top - rect.height/2;
+    this.style.transform = `translate(${relX*0.12}px, ${relY*0.3}px)`;
+  });
+  btn.addEventListener('mouseleave', function(){
+    this.style.transform = '';
+  });
+});
+
+// ---------- Ripple on buttons ----------
+document.querySelectorAll('.btn').forEach(btn=>{
+  btn.addEventListener('click', function(e){
+    const rect = this.getBoundingClientRect();
+    const ripple = document.createElement('span');
+    ripple.className='ripple';
+    ripple.style.left = (e.clientX-rect.left-10)+'px';
+    ripple.style.top = (e.clientY-rect.top-10)+'px';
+    ripple.style.width = ripple.style.height = '20px';
+    this.appendChild(ripple);
+    setTimeout(()=>ripple.remove(),650);
+  });
+});
+
+// ---------- Hero blueprint diagram ----------
+const heroNodesData = [
+  {id:'research', label:'Research', x:70, y:70},
+  {id:'essays', label:'Essays', x:280, y:50},
+  {id:'scholarships', label:'Scholarships', x:340, y:180},
+  {id:'satact', label:'SAT / ACT', x:60, y:200},
+  {id:'summer', label:'Summer Programs', x:180, y:130},
+  {id:'leadership', label:'Leadership', x:100, y:320},
+  {id:'finaid', label:'Financial Aid', x:300, y:330},
+  {id:'applications', label:'Applications', x:200, y:250},
+];
+
+const heroLinks = [
+  ['research','summer'],['summer','essays'],['summer','satact'],
+  ['essays','scholarships'],['summer','applications'],['applications','leadership'],
+  ['applications','finaid'],['scholarships','finaid'],['satact','leadership']
+];
+
+const linesGroup = document.getElementById('hero-lines');
+const nodesGroup = document.getElementById('hero-nodes');
+const nodeMap = {};
+heroNodesData.forEach(n=>nodeMap[n.id]=n);
+
+const svgNS = 'http://www.w3.org/2000/svg';
+
+heroLinks.forEach(([a,b])=>{
+  const na = nodeMap[a], nb = nodeMap[b];
+  const line = document.createElementNS(svgNS,'line');
+  line.setAttribute('x1',na.x); line.setAttribute('y1',na.y);
+  line.setAttribute('x2',nb.x); line.setAttribute('y2',nb.y);
+  line.classList.add('conn-line');
+  line.dataset.a = a; line.dataset.b = b;
+  linesGroup.appendChild(line);
+});
+
+heroNodesData.forEach((n,i)=>{
+  const g = document.createElementNS(svgNS,'g');
+  g.classList.add('node');
+  g.dataset.id = n.id;
+  g.style.animation = `floatY ${4+ (i%3)}s ease-in-out infinite`;
+  g.style.animationDelay = (i*0.3)+'s';
+
+  const circle = document.createElementNS(svgNS,'circle');
+  circle.setAttribute('cx',n.x); circle.setAttribute('cy',n.y); circle.setAttribute('r',5.5);
+  circle.setAttribute('fill', i%2===0 ? '#3B82F6' : '#22D3EE');
+  g.appendChild(circle);
+
+  const text = document.createElementNS(svgNS,'text');
+  text.setAttribute('x', n.x); text.setAttribute('y', n.y-12);
+  text.setAttribute('text-anchor','middle');
+  text.textContent = n.label;
+  g.appendChild(text);
+
+  g.addEventListener('mouseenter', ()=>{
+    document.querySelectorAll(`.conn-line[data-a="${n.id}"], .conn-line[data-b="${n.id}"]`).forEach(l=>l.classList.add('lit'));
+  });
+  g.addEventListener('mouseleave', ()=>{
+    document.querySelectorAll(`.conn-line[data-a="${n.id}"], .conn-line[data-b="${n.id}"]`).forEach(l=>l.classList.remove('lit'));
+  });
+
+  nodesGroup.appendChild(g);
+});
+
+// parallax on mouse move
+const panel = document.querySelector('.blueprint-panel');
+panel.addEventListener('mousemove', (e)=>{
+  const rect = panel.getBoundingClientRect();
+  const relX = (e.clientX - rect.left)/rect.width - 0.5;
+  const relY = (e.clientY - rect.top)/rect.height - 0.5;
+  nodesGroup.style.transform = `translate(${relX*8}px, ${relY*8}px)`;
+});
+panel.addEventListener('mouseleave', ()=>{
+  nodesGroup.style.transform = 'translate(0,0)';
+});
+
+// ---------- Scroll reveal ----------
+const revealEls = document.querySelectorAll('.reveal');
+const revealObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add('in');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+},{threshold:0.15});
+revealEls.forEach(el=>revealObserver.observe(el));
+
+// connector draw-on-scroll
+const connectorEls = document.querySelectorAll('.connector-draw');
+const connObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add('drawn');
+      connObserver.unobserve(entry.target);
+    }
+  });
+},{threshold:0.2});
+connectorEls.forEach(el=>connObserver.observe(el));
+
+// ---------- Roadmap accordion ----------
+document.querySelectorAll('.stage-head').forEach(head=>{
+  head.addEventListener('click', ()=>{
+    const stage = head.parentElement;
+    const wasOpen = stage.classList.contains('open');
+    document.querySelectorAll('.stage').forEach(s=>s.classList.remove('open'));
+    if(!wasOpen) stage.classList.add('open');
+  });
+});
+
+// ---------- Decision tree ----------
+const roadmapData = {
+  freshman: ['Take the most rigorous courses you can handle', 'Try 3-4 different extracurriculars', 'Build a habit of reading outside class', 'Meet your school counselor once this year'],
+  sophomore: ['Narrow down to 1-2 core extracurriculars', 'Take a diagnostic PSAT or practice SAT', 'Start a running list of potential summer programs', 'Look for a small leadership opportunity'],
+  junior: ['Lock in your standardized test plan', 'Build your initial college list', 'Ask two teachers for recommendation letters', 'Draft your first personal essay topic'],
+  senior: ['Finalize your college list by early fall', 'Submit early action / early decision applications', 'Apply to at least 5 scholarships', 'Proofread every essay twice before submitting']
+};
+
+const goalAdd = {
+  reach: 'Spend extra hours polishing 1-2 signature achievements over breadth',
+  scholarship: 'Build a shared tracker for every scholarship deadline this year',
+  fit: 'Visit or virtually tour 3 schools that differ in size and location',
+  undecided: 'Talk to 3 people in different careers before picking a major'
+};
+
+const concernAdd = {
+  essays: 'Block out 2 hours weekly just for essay drafts, starting now',
+  scores: 'Take one full practice test every 2 weeks until test day',
+  activities: 'Pick one activity and go deeper instead of adding new ones',
+  money: 'Run the Net Price Calculator on every school on your list'
+};
+
+document.getElementById('build-roadmap-btn').addEventListener('click', (e)=>{
+  e.preventDefault();
+  const grade = document.getElementById('q-grade').value;
+  const goal = document.getElementById('q-goal').value;
+  const concern = document.getElementById('q-concern').value;
+
+  const steps = [...roadmapData[grade], goalAdd[goal], concernAdd[concern]];
+  const list = document.getElementById('result-list');
+  list.innerHTML='';
+  steps.forEach((step,i)=>{
+    const item = document.createElement('div');
+    item.className='result-item';
+    item.style.animationDelay = (i*0.08)+'s';
+    item.innerHTML = `<span class="step-idx mono">${String(i+1).padStart(2,'0')}</span><span>${step}</span>`;
+    list.appendChild(item);
+  });
+  document.getElementById('decision-result').classList.add('show');
+});
+
+// ---------- Impact counters ----------
+const counters = document.querySelectorAll('.impact-num');
+const counterObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      animateCounter(entry.target);
+      counterObserver.unobserve(entry.target);
+    }
+  });
+},{threshold:0.4});
+counters.forEach(c=>counterObserver.observe(c));
+
+function animateCounter(el){
+  const target = parseInt(el.dataset.target,10);
+  const suffix = el.dataset.suffix || '';
+  const duration = 1400;
+  const start = performance.now();
+  function tick(now){
+    const progress = Math.min((now-start)/duration,1);
+    const eased = 1 - Math.pow(1-progress,3);
+    const value = Math.floor(eased*target);
+    el.textContent = value.toLocaleString() + suffix;
+    if(progress<1) requestAnimationFrame(tick);
+    else el.textContent = target.toLocaleString()+suffix;
+  }
+  requestAnimationFrame(tick);
+}
+</script>
+
+</body>
+</html>
