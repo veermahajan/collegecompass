@@ -126,9 +126,9 @@ export function CompassScoreSection() {
     <Card className="mb-10">
       <CardTitle>Compass Score</CardTitle>
       <CardBody className="mb-6">
-        Directional, not predictive. No tool can promise an admission
-        decision — this is a self-assessment snapshot of your profile as it
-        stands today, meant to help you see where to focus next.
+        This resource is directional, not predictive. No tool can promise an admission
+        decision, and we don't claim to do so. This is a self-assessment snapshot of your profile as it
+        stands today, meant to guide you in deciding where to focus next.
       </CardBody>
 
       {status === "loading" && (
@@ -136,7 +136,7 @@ export function CompassScoreSection() {
       )}
       {status === "error" && (
         <p className="text-[0.9rem] text-ink-soft">
-          Couldn&apos;t load your Compass Score right now. Try refreshing.
+          We couldn&apos;t load your Compass Score right now. Try refreshing the page, and <a target="_blank" href="../feedback/page.tsx">leave us feedback</a> if there are any issues.
         </p>
       )}
       {status === "ready" && scores && (
