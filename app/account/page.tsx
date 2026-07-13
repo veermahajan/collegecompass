@@ -22,7 +22,7 @@ export default async function AccountPage() {
           </h2>
           <p className="mb-4 text-[0.9rem] text-ink-soft">
             This deactivates your account immediately and permanently erases
-            all of your data after 30 days. Enter your password to confirm.
+            all of your data after 30 days. Enter your password to confirm that you want to delete your account.
           </p>
           <DeleteAccountForm />
         </div>
