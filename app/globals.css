@@ -2,19 +2,48 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Compass base styles — tokens live in tailwind.config.ts (spec Sec 2).
-   No dark mode in MVP; the mockup defines a single light palette. */
+/* Compass base styles — "Blueprint" theme. Tokens live in
+   tailwind.config.ts. No dark mode in MVP; single light palette. */
+
+html {
+  scroll-behavior: smooth;
+}
 
 body {
   @apply bg-canvas text-ink font-sans antialiased;
   line-height: 1.5;
+  position: relative;
 }
 
 h1,
 h2,
 h3 {
   @apply font-display font-semibold text-ink;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
+}
+
+::selection {
+  background: #22d3ee;
+  color: #0f172a;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Click ripple on Button/ButtonLink (components/ui/button.tsx). */
+@keyframes compass-ripple {
+  to {
+    transform: scale(3);
+    opacity: 0;
+  }
 }
 
 /* iOS Safari auto-zooms the page on focus of any form control with a

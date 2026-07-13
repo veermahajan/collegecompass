@@ -1,15 +1,16 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Inter, IBM_Plex_Mono } from "next/font/google";
+import { Space_Grotesk, Inter, IBM_Plex_Mono } from "next/font/google";
 import { auth } from "@/auth";
 import { Providers } from "@/components/providers";
+import { AmbientBackground } from "@/components/ui/ambient-background";
 import "./globals.css";
 
-// Spec Sec 2: Fraunces (display, 600, headings only), Inter (body),
-// IBM Plex Mono (scores, numbers, timestamps).
-const fraunces = Fraunces({
+// Blueprint theme: Space Grotesk (display, 600, headings only), Inter
+// (body), IBM Plex Mono (scores, numbers, timestamps).
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   weight: ["600"],
-  variable: "--font-fraunces",
+  variable: "--font-space-grotesk",
 });
 const inter = Inter({
   subsets: ["latin"],
@@ -33,7 +34,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#FBF7EE",
+  themeColor: "#FAF8F5",
 };
 
 export default async function RootLayout({
@@ -44,8 +45,9 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${fraunces.variable} ${inter.variable} ${plexMono.variable}`}
+        className={`${spaceGrotesk.variable} ${inter.variable} ${plexMono.variable}`}
       >
+        <AmbientBackground />
         <Providers session={session}>{children}</Providers>
       </body>
     </html>

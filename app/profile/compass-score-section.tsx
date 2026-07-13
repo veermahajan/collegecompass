@@ -53,7 +53,7 @@ function RadarChart({ scores }: { scores: number[] }) {
           key={ring}
           points={polygonPoints([100, 100, 100, 100].map((v) => v * ring))}
           fill="none"
-          stroke="#E8E0CF"
+          stroke="rgba(15,23,42,0.12)"
           strokeWidth={1}
         />
       ))}
@@ -66,15 +66,15 @@ function RadarChart({ scores }: { scores: number[] }) {
             y1={CENTER}
             x2={x}
             y2={y}
-            stroke="#E8E0CF"
+            stroke="rgba(15,23,42,0.12)"
             strokeWidth={1}
           />
         );
       })}
       <polygon
         points={polygonPoints(scores)}
-        fill="rgba(124, 148, 115, 0.35)"
-        stroke="#7C9473"
+        fill="rgba(59, 130, 246, 0.25)"
+        stroke="#3B82F6"
         strokeWidth={2}
       />
       {AXES.map((axis, i) => {
@@ -87,7 +87,7 @@ function RadarChart({ scores }: { scores: number[] }) {
             textAnchor="middle"
             dominantBaseline="middle"
             fontSize={12}
-            fill="#5B5A50"
+            fill="#475569"
           >
             {axis.label}
           </text>
