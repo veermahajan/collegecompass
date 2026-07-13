@@ -105,7 +105,13 @@ model HonorAward {
   profileId     String
   profile       AcademicProfile @relation(fields: [profileId], references: [id])
   title         String
-  level         String   // school / regional / state / national / international
+  // Rigor/selectivity on a 1-10 gradient (1 = AP Scholar-level barrier to
+  // entry, 6 = AIME qualification, 8 = USAJMO, 9 = MOSP, 10 = IMO) — replaces
+  // the old school/regional/state/national/international tier, which
+  // couldn't distinguish wildly different levels of accomplishment within
+  // "national". See lib/rigor-scale.ts for the full level guide and sample
+  // activity table.
+  level         Int
   year          Int
 }
 

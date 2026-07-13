@@ -138,7 +138,8 @@ model HonorAward {
   profileId     String
   profile       AcademicProfile @relation(fields: [profileId], references: [id])
   title         String
-  level         String   // school / regional / state / national / international
+  level         Int      // 1-10 rigor/selectivity gradient, not a tier label — see lib/rigor-scale.ts
+                          // (1 = AP Scholar-tier, 6 = AIME, 8 = USAJMO, 9 = MOSP, 10 = IMO)
   year          Int
 }
 

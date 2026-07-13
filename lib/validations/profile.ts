@@ -21,9 +21,12 @@ export const extracurricularSchema = z.object({
 
 export type ExtracurricularInput = z.infer<typeof extracurricularSchema>;
 
+// Rigor/selectivity on a 1-10 gradient — see lib/rigor-scale.ts for the
+// full level guide (1 = AP Scholar-tier, 6 = AIME, 8 = USAJMO, 9 = MOSP,
+// 10 = IMO) and sample activity table.
 export const honorSchema = z.object({
   title: z.string().trim().min(1).max(150),
-  level: z.enum(["school", "regional", "state", "national", "international"]),
+  level: z.number().int().min(1).max(10),
   year: z.number().int().min(1990).max(2100),
 });
 

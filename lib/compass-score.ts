@@ -39,18 +39,27 @@ function computeAcademicsScore(profile: {
 }
 
 // ---- Honors (0-100) ----
-// Additive by award level, capped at 100. Intentionally saturating: a
-// handful of high-level honors should max the subscore rather than
-// requiring dozens of entries to do so.
-const HONOR_POINTS_BY_LEVEL: Record<string, number> = {
-  school: 5,
-  regional: 10,
-  state: 15,
-  national: 25,
-  international: 35,
+// Additive by rigor level (1-10, see lib/rigor-scale.ts), capped at 100.
+// Points scale convexly rather than linearly — the gap between adjacent
+// levels widens as level increases — so that one top-tier honor (e.g. a
+// 10, IMO-caliber) plus a single other solid honor already nears the cap,
+// while a handful of low-barrier honors (1-2s) can't stack up to the same
+// total. Intentionally saturating: a couple of high-rigor honors should
+// max the subscore rather than requiring dozens of entries to do so.
+const HONOR_POINTS_BY_LEVEL: Record<number, number> = {
+  1: 3,
+  2: 5,
+  3: 8,
+  4: 12,
+  5: 17,
+  6: 23,
+  7: 30,
+  8: 38,
+  9: 47,
+  10: 60,
 };
 
-function computeHonorsScore(honors: { level: string }[]): number {
+function computeHonorsScore(honors: { level: number }[]): number {
   const total = honors.reduce(
     (sum, h) => sum + (HONOR_POINTS_BY_LEVEL[h.level] ?? 0),
     0
