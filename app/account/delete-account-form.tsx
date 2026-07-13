@@ -57,7 +57,7 @@ export function DeleteAccountForm() {
         disabled={submitting}
         className="border-red-300 text-red-700 hover:border-red-700"
       >
-        {submitting ? "Deleting…" : "Delete my account"}
+        {submitting ? "Deletion in progress…" : "Delete my account"}
       </Button>
     </form>
   );
