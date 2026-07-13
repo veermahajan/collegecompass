@@ -79,18 +79,18 @@ export function CollegeListSection({
             <a href="/profile" className="font-medium text-sage-deep">
               academic profile
             </a>{" "}
-            to get bucket suggestions for each school. Without them, new
-            additions default to &quot;target.&quot;
+            to get bucket suggestions for each school. Without them, all new
+            additions default to &quot;target.&quot; and might be inaccurate!
           </p>
         </Card>
       )}
 
       <Card hover={false} className="mb-8">
-        <h2 className="mb-4 font-display text-lg font-semibold">Your list</h2>
+        <h2 className="mb-4 font-display text-lg font-semibold">Your college list</h2>
 
         {initialItems.length === 0 && (
           <p className="text-[0.9rem] text-ink-soft">
-            No colleges on your list yet — add one below.
+            There aren't any colleges on your list currently, but you can add one below.
           </p>
         )}
 

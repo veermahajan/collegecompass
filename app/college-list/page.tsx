@@ -48,11 +48,11 @@ export default async function CollegeListPage() {
       <main className="mx-auto max-w-[860px] px-6 py-16">
         <h1 className="mb-2 text-4xl">College list</h1>
         <p className="mb-10 max-w-[560px] text-[0.95rem] text-ink-soft">
-          Reach / target / safety is a starting point based on published
-          averages for each school, compared against your GPA and test
-          scores — it&apos;s not a guarantee of admission or rejection.
-          Move any school between buckets yourself; your judgment
-          overrides the algorithm.
+          The current reach / target / safety categorization is a starting point based on published
+          averages for each school that also considers your GPA and test
+          scores — it's not a guarantee of admission or rejection, and many other factors will also affect your admission.
+          The suggestion we offer is <strong>not at all perfect</strong>, so feel free to manually override buckets for any school;
+          your judgment overrides the algorithm.
         </p>
 
         <CollegeListSection
